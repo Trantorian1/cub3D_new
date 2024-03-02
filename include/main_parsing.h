@@ -10,9 +10,6 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "mlx.h"
-# include <X11/X.h>
-# include <X11/keysym.h>
 # include <math.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -32,11 +29,12 @@ typedef struct s_texture
 
 } t_texture;
 
-typedef struct s_mapinfo
+typedef struct s_map
 {
     int width;
+    char **tab;
     
-} t_mapinfo;
+} t_map;
 
 typedef struct s_img{
 	void	*mlx;
@@ -59,6 +57,10 @@ typedef struct s_data
 {
     char *file;
     size_t file_size;
+
+    int fd;
+
+    t_map *map;
 
     t_img       img;
 	void		*mlx;

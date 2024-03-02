@@ -6,7 +6,7 @@
 /*   By: rraffi-k <rraffi-k@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 13:58:27 by rraffi-k          #+#    #+#             */
-/*   Updated: 2024/03/01 14:33:53 by rraffi-k         ###   ########.fr       */
+/*   Updated: 2024/03/02 16:47:56 by rraffi-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,25 @@ size_t get_file_size(int fd)
 	return (size);
 }
 
+int	parse_file(char *file, t_data *data)
+{
+	data->fd = safe_open(file);
+	if (data->fd == -1)
+		return (-1);
+	
+	data->map
+}
+
+int	parse_args(int argc, char **argv)
+{
+	if (argc != 2)
+	{
+		printf(ERROR);
+		return (EXIT_FAILURE);		
+	}
+	return (EXIT_SUCCESS);
+}
+
 // int	main(int argc, char **argv)
 // {
 // 	t_data data;
@@ -98,13 +117,11 @@ size_t get_file_size(int fd)
 
 // 	// (void) argv;
 // 	// (void) argc;
-
-// 	if (argc != 2)
-// 	{
-// 		printf(ERROR);
-// 		return (EXIT_FAILURE);
-// 	}
 	
+	if (parse_args(argc, argv) != 0)
+		return (EXIT_FAILURE);
+	
+
 // 	fd = safe_open(argv[1]);
 
 // 	char *line;
