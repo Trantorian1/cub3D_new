@@ -29,14 +29,14 @@ $(LIB): $(FILES_OBJS) $(FILES_DEPS)
 	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) -shared$(RESET)\n" "$(LIB)"
 # 	builds libary
 	@mkdir -p $(@D)
-	@$(C_COMPILER) -shared -o $(LIB) $(FILES_OBJS)
+	@$(C_COMPILER) -shared -o $(LIB) $(filter-out %main.o,$(FILES_OBJS))
 
 $(BIN): $(FILES_OBJS) $(FILES_DEPS)
 # 	displays build command
-	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV)$(RESET)\n" "$(BIN)"
+	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(LIBS)$(RESET)\n" "$(BIN)"
 # 	builds libary
 	@mkdir -p $(@D)
-	@$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV) -o $(BIN) $(FILES_OBJS)
+	@$(C_COMPILER) $(C_FLAGS) -o $(BIN) $(FILES_OBJS) $(LIBS)
 
 # =================================[ OBJECTS ]================================ #
 

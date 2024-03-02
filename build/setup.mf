@@ -11,25 +11,24 @@ DIR_OBJS   = $(DIR_BUILD)/objs
 DIR_DEPS   = $(DIR_BUILD)/deps
 DIR_SRCS   = ./src
 DIR_TEST   = ./test
-DIR_INCL   = ./include ./vendor/ ./vendor/minilibx-linux
+DIR_INCL   = ./include ./vendor/minilibx-linux
 DIR_BIN    = ./bin
 
 OPT        = -O2
 DEBUG      = -g
-LIBS_DEV   = -lX11 -lXext -Lvendor/minilibx-linux -lmlx -lm
-LIBS_PROD  = -lX11 -lXext -Lvendor/minilibx-linux -lmlx -lm
+LIBS       = -L./vendor/minilibx-linux -lmlx -lX11 -lXext -lm
 
-DEV_HOOK_PRE   =
-DEV_HOOK_POST  =
-PROD_HOOK_PRE  = \
+DEV_HOOK_PRE   = \
 	echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) MLX"; \
 	if [ ! -f "vendor/minilibx-linux/libmlx.a" ]; then \
 		make --silent -C vendor/minilibx-linux all; \
 	fi
+DEV_HOOK_POST  =
+PROD_HOOK_PRE  = 
 PROD_HOOK_POST =
 
 C_COMPILER = clang
-I_FLAGS    = $(foreach dir,$(DIR_INCL),-I$(dir) )
+I_FLAGS    = $(foreach dir,$(DIR_INCL),-I$(dir))
 SILENCED   = -Wno-missing-variable-declarations
 C_FLAGS    = -Wall -Wextra $(I_FLAGS)
 C_DEPS     = -MM -MP $(I_FLAGS)

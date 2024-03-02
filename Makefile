@@ -5,7 +5,7 @@
 
 # ==================================[ SETUP ]================================= #
 
-DOCKER = docker run --rm -v .:/app trantorian/criterion:2.4.2.v
+DOCKER = docker run --rm -v .:/app cub3d
 CORES  = $(($(nproc) + 1))
 
 all: 
@@ -69,12 +69,19 @@ ifneq ($(PROD_HOOK_POST),)
 	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 endif
 
+# ==================================[ DOCKER ]================================ #
+
+docker:
+	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) Dockerfile"
+	@docker build ./build -t cub3d
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+
 # ==================================[ DEBUG ]================================= #
 
 debug:
 	@make --silent dev_hook_pre
 	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) debug"
-	@$(DOCKER) make -j$(CORES) --silent --file=./build/build_debug.mf
+	@make -j$(CORES) --silent --file=./build/build_debug.mf
 	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 	@make --silent dev_hook_post
 
@@ -93,7 +100,7 @@ debug_re: debug_fclean
 
 # ==================================[ TEST ]================================== #
 
-test: debug
+test: debug docker
 	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) test"
 	@$(DOCKER) make --silent --file=./build/build_test.mf
 	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
@@ -135,7 +142,9 @@ final_re: final_fclean
 
 
 
-.PHONY: all clean fclean re run                 \
-        debug debug_clean debug_fclean debug_re \
-		test test_clean test_fclean test_re     \
+.PHONY: all clean fclean re run                                 \
+		dev_hook_pre dev_hook_post prod_hook_pre prod_hook_post \
+		docker                                                  \
+        debug debug_clean debug_fclean debug_re                 \
+		test test_clean test_fclean test_re                     \
         final final_clean final_fclean final_re
