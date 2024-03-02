@@ -28,7 +28,7 @@ all: $(FILES_TEST)
 
 $(DIR_BIN)/test/%: $(DIR_TEST)/%.c $$(subst test_,,src/$$*.c)
 # 	displays build command
-	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
+	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV)\n$(RESET)" "$(notdir $@)"
 # 	builds object file
 	@mkdir -p $(@D)
 	@$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV) $< -o $@

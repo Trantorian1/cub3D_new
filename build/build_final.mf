@@ -24,7 +24,7 @@ $(BIN): $(FILES_OBJS) $(FILES_DEPS)
 	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(FILES_OBJS) -o $(BIN) $(LIBS_PROD)$(RESET)\n" "$@"
 # 	builds binary
 	@mkdir -p $(@D)
-	@$(C_COMPILER) $(C_FLAGS) -o $(BIN) $(FILES_OBJS)
+	@$(C_COMPILER) $(C_FLAGS) $(LIBS_PROD) -o $(BIN) $(FILES_OBJS)
 
 # =================================[ OBJECTS ]================================ #
 

@@ -11,13 +11,13 @@ DIR_OBJS   = $(DIR_BUILD)/objs
 DIR_DEPS   = $(DIR_BUILD)/deps
 DIR_SRCS   = ./src
 DIR_TEST   = ./test
-DIR_INCL   = ./include ../vendor/
+DIR_INCL   = ./include ./vendor/ ./vendor/minilibx-linux
 DIR_BIN    = ./bin
 
 OPT        = -O2
 DEBUG      = -g
-LIBS_DEV   = 
-LIBS_PROD  = -lmlx -Lvendor/minilibx-linux
+LIBS_DEV   = -lX11 -lXext -Lvendor/minilibx-linux -lmlx -lm
+LIBS_PROD  = -lX11 -lXext -Lvendor/minilibx-linux -lmlx -lm
 
 DEV_HOOK_PRE   =
 DEV_HOOK_POST  =

@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   s_map.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 11:05:36 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/02 15:45:40 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/02 15:05:37 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/02 15:48:54 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
-#include <stdlib.h>
+#ifndef S_MAP_H
+# define S_MAP_H
 
-#include "validate_args.h"
-#include "programdata.h"
+# include <stdint.h>
+# include "s_player.h"
 
-int32_t	main(int32_t argc, char const *argv[])
-{
-	t_programdata	data;
-	
-	if (validate_args(argc, argv) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
-	}
-	if (programdata(argv[1], &data) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
-	}
+# define WALL '1'
+# define FLOOR '0'
+# define VOID ' '
+# define PLAYER 'P'
 
-	free(data.mlx);
-	return (EXIT_SUCCESS);
-}
+typedef struct s_map {
+	const char		*data;
+	const uint32_t	width;
+	const uint32_t	height;
+	t_player		player;
+}	t_map;
+
+#endif

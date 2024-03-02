@@ -33,10 +33,10 @@ $(LIB): $(FILES_OBJS) $(FILES_DEPS)
 
 $(BIN): $(FILES_OBJS) $(FILES_DEPS)
 # 	displays build command
-	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) -shared$(RESET)\n" "$(BIN)"
+	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV)$(RESET)\n" "$(BIN)"
 # 	builds libary
 	@mkdir -p $(@D)
-	@$(C_COMPILER) $(C_FLAGS) -o $(BIN) $(FILES_OBJS)
+	@$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV) -o $(BIN) $(FILES_OBJS)
 
 # =================================[ OBJECTS ]================================ #
 
