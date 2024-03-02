@@ -1,3 +1,7 @@
+# ===============================[ DEPENDENCIES ]============================= #
+
+-include ./build/color.mf
+
 # ==================================[ SETUP ]================================= #
 
 VALGRIND   = valgrind --trace-children=yes --leak-check=full --show-leak-kinds=all
@@ -12,7 +16,17 @@ DIR_BIN    = ./bin
 
 OPT        = -O2
 DEBUG      = -g
-LIBS       =
+LIBS_DEV   = 
+LIBS_PROD  = -lmlx -Lvendor/minilibx-linux
+
+DEV_HOOK_PRE   =
+DEV_HOOK_POST  =
+PROD_HOOK_PRE  = \
+	echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) MLX"; \
+	if [ ! -f "vendor/minilibx-linux/libmlx.a" ]; then \
+		make --silent -C vendor/minilibx-linux all; \
+	fi
+PROD_HOOK_POST =
 
 C_COMPILER = clang
 I_FLAGS    = $(foreach dir,$(DIR_INCL),-I$(dir) )
