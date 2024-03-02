@@ -1,0 +1,9 @@
+# build artefacts
+./build/objs/**
+./build/deps/**
+
+# projects binaries
+./bin/**
+
+# vscode settings
+.vscode/**

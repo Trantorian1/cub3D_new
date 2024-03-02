@@ -1,0 +1,100 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/04/06 14:08:48 by emcnab            #+#    #+#              #
+#    Updated: 2024/03/02 11:41:58 by emcnab           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+DOCKER   = docker run --rm -v .:/app trantorian/criterion:2.4.2.v
+VALGRIND = valgrind --trace-children=yes --leak-check=full --show-leak-kinds=all
+CORES    = $(($(nproc) + 1))
+
+# **************************************************************************** #
+#                               COMPILATIONS TASKS                             #
+# **************************************************************************** #
+
+all: final
+
+clean: clean_debug clean_test clean_final
+
+fclean: fclean_debug fclean_test fclean_final
+
+re: fclean_final
+	@echo "$(BOLD)$(BLUE)[ Rebuilding Final binary ]$(RESET)"
+	make --silent final
+
+# **************************************************************************** #
+#                                   SUBMODULES                                 #
+# **************************************************************************** #
+
+# dynamic:
+# 	@echo ">> dynamic"
+# 	@make --silent --directory=./vendor/dynamic final
+# 	@echo "<< dynamic"
+
+# fclean_dynamic:
+# 	@echo ">> dynamic"
+# 	@make --silent --directory=./vendor/dynamic fclean
+# 	@echo << dynamic
+
+# **************************************************************************** #
+#                                     DEBUG                                    #
+# **************************************************************************** #
+
+debug:
+	@echo "$(BOLD)$(RED)[ Building in Debug Mode ]$(RESET)"
+	@make -j$(CORES) --silent --file=./build/build_debug.mf
+
+clean_debug:
+	@echo "$(BOLD)$(RED)[ Removing all Debug objects ]$(RESET)"
+	@make clean --silent --file=./build/build_debug.mf
+
+fclean_debug:
+	@echo "$(BOLD)$(RED)[ Removing all Debug build artifacts ]$(RESET)"
+	@make fclean --silent --file=./build/build_debug.mf
+
+# **************************************************************************** #
+#                                      TEST                                    #
+# **************************************************************************** #
+
+test: debug
+	@echo "$(BOLD)$(YELLOW)[ Building in Test Mode]$(RESET)"
+	@$(DOCKER) make --silent --file=./build/build_test.mf
+
+clean_test:
+	@echo "$(BOLD)$(YELLOW)[ Removing all Test objects]$(RESET)"
+	@make clean --silent --file=./build/build_test.mf
+
+fclean_test:
+	@echo "$(BOLD)$(YELLOW)[ Removing all Test build artifacts]$(RESET)"
+	@make fclean --silent --file=./build/build_test.mf
+
+# **************************************************************************** #
+#                                   FINAL TASK                                 #
+# **************************************************************************** #
+
+final: test
+	@echo "$(BOLD)$(BLUE)[ Building in Final Mode ]$(RESET)"
+	@make -j$(CORES) --silent --file=./build/build_final.mf
+
+clean_final:
+	@echo "$(BOLD)$(BLUE)[ Removing all Final objects ]$(RESET)"
+	@make clean --silent --file=./build/build_final.mf
+
+fclean_final:
+	@echo "$(BOLD)$(BLUE)[ Removing all Final build artifacts ]$(RESET)"
+	@make fclean --silent --file=./build/build_final.mf
+
+-include ./build/colors.mf
+
+
+
+.PHONY: all fclean re                                    \
+	    debug clean_debug fclean_debug re_debug          \
+	    test test_verbose clean_test fclean_test re_test \
+	    final clean_final fclean_final re_final
