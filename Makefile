@@ -39,12 +39,44 @@ run: all
 	@make --silent --file=./build/build_final.mf run
 	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
+# ==================================[ HOOKS ]================================= #
+
+dev_hook_pre:
+ifneq ($(DEV_HOOK_PRE),)
+	@echo "🪝  $(WHITE)$(DIM)Developemnt pre-compilation hook$(RESET)"
+	@$(DEV_HOOK_PRE)
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+endif
+
+dev_hook_post:
+ifneq ($(DEV_HOOK_POST),)
+	@echo "🪝  $(WHITE)$(DIM)Developemnt post-compilation hook$(RESET)"
+	@$(DEV_HOOK_POST)
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+endif
+
+prod_hook_pre:
+ifneq ($(PROD_HOOK_PRE),)
+	@echo "🪝  $(WHITE)$(DIM)Production pre-compilation hook$(RESET)"
+	@$(PROD_HOOK_PRE)
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+endif
+
+prod_hook_post:
+ifneq ($(PROD_HOOK_POST),)
+	@echo "🪝  $(WHITE)$(DIM)Production post-compilation hook$(RESET)"
+	@$(PROD_HOOK_POST)
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+endif
+
 # ==================================[ DEBUG ]================================= #
 
 debug:
+	@make --silent dev_hook_pre
 	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) debug"
 	@$(DOCKER) make -j$(CORES) --silent --file=./build/build_debug.mf
 	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+	@make --silent dev_hook_post
 
 debug_clean:
 	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) debug"
@@ -82,9 +114,11 @@ test_re: test_fclean
 # ==================================[ FINAL ]================================= #
 
 final: test
+	@make --silent prod_hook_pre
 	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) final"
 	@make -j$(CORES) --silent --file=./build/build_final.mf
 	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+	@make --silent prod_hook_post
 
 final_clean:
 	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) final"
