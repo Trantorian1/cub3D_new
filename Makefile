@@ -1,100 +1,107 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/06 14:08:48 by emcnab            #+#    #+#              #
-#    Updated: 2024/03/02 11:41:58 by emcnab           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+# ===============================[ DEPENDENCIES ]============================= #
 
-DOCKER   = docker run --rm -v .:/app trantorian/criterion:2.4.2.v
-VALGRIND = valgrind --trace-children=yes --leak-check=full --show-leak-kinds=all
-CORES    = $(($(nproc) + 1))
+-include ./build/color.mf
+-include ./build/setup.mf
 
-# **************************************************************************** #
-#                               COMPILATIONS TASKS                             #
-# **************************************************************************** #
+# ==================================[ SETUP ]================================= #
 
-all: final
+DOCKER = docker run --rm -v .:/app trantorian/criterion:2.4.2.v
+CORES  = $(($(nproc) + 1))
 
-clean: clean_debug clean_test clean_final
+all: 
+	@echo "$(DIM)$(WHITE)> $(shell date)$(RESET)"
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+	@make --silent final
 
-fclean: fclean_debug fclean_test fclean_final
+clean:
+	@echo "$(DIM)$(WHITE)> $(shell date)$(RESET)"
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+	@make --silent debug_clean
+	@make --silent test_clean
+	@make --silent final_clean
 
-re: fclean_final
-	@echo "$(BOLD)$(BLUE)[ Rebuilding Final binary ]$(RESET)"
-	make --silent final
+fclean:
+	@echo "$(DIM)$(WHITE)> $(shell date)$(RESET)"
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+	@make --silent debug_fclean
+	@make --silent test_fclean
+	@make --silent final_fclean
 
-# **************************************************************************** #
-#                                   SUBMODULES                                 #
-# **************************************************************************** #
+re:
+	@echo "$(DIM)$(WHITE)> $(shell date)$(RESET)"
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
+	@make --silent debug_fclean
+	@make --silent test_fclean
+	@make --silent final_fclean
+	@make --silent final
 
-# dynamic:
-# 	@echo ">> dynamic"
-# 	@make --silent --directory=./vendor/dynamic final
-# 	@echo "<< dynamic"
+run: all
+	@make --silent --file=./build/build_final.mf run
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-# fclean_dynamic:
-# 	@echo ">> dynamic"
-# 	@make --silent --directory=./vendor/dynamic fclean
-# 	@echo << dynamic
-
-# **************************************************************************** #
-#                                     DEBUG                                    #
-# **************************************************************************** #
+# ==================================[ DEBUG ]================================= #
 
 debug:
-	@echo "$(BOLD)$(RED)[ Building in Debug Mode ]$(RESET)"
-	@make -j$(CORES) --silent --file=./build/build_debug.mf
+	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) debug"
+	@$(DOCKER) make -j$(CORES) --silent --file=./build/build_debug.mf
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-clean_debug:
-	@echo "$(BOLD)$(RED)[ Removing all Debug objects ]$(RESET)"
-	@make clean --silent --file=./build/build_debug.mf
+debug_clean:
+	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) debug"
+	@make --silent --file=./build/build_debug.mf clean
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-fclean_debug:
-	@echo "$(BOLD)$(RED)[ Removing all Debug build artifacts ]$(RESET)"
-	@make fclean --silent --file=./build/build_debug.mf
+debug_fclean:
+	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) debug"
+	@make --silent --file=./build/build_debug.mf fclean
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-# **************************************************************************** #
-#                                      TEST                                    #
-# **************************************************************************** #
+debug_re: debug_fclean
+	@make --sile debug
+
+# ==================================[ TEST ]================================== #
 
 test: debug
-	@echo "$(BOLD)$(YELLOW)[ Building in Test Mode]$(RESET)"
+	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) test"
 	@$(DOCKER) make --silent --file=./build/build_test.mf
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-clean_test:
-	@echo "$(BOLD)$(YELLOW)[ Removing all Test objects]$(RESET)"
-	@make clean --silent --file=./build/build_test.mf
+test_clean:
+	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) test"
+	@make --silent --file=./build/build_test.mf clean
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-fclean_test:
-	@echo "$(BOLD)$(YELLOW)[ Removing all Test build artifacts]$(RESET)"
-	@make fclean --silent --file=./build/build_test.mf
+test_fclean:
+	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) test"
+	@make --silent --file=./build/build_test.mf fclean
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-# **************************************************************************** #
-#                                   FINAL TASK                                 #
-# **************************************************************************** #
+test_re: test_fclean
+	@make --silent test
+
+# ==================================[ FINAL ]================================= #
 
 final: test
-	@echo "$(BOLD)$(BLUE)[ Building in Final Mode ]$(RESET)"
+	@echo "$(BLUE_BG)$(WHITE)$(BOLD)[ Building ]$(RESET)$(WHITE)$(ITALIC) final"
 	@make -j$(CORES) --silent --file=./build/build_final.mf
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-clean_final:
-	@echo "$(BOLD)$(BLUE)[ Removing all Final objects ]$(RESET)"
-	@make clean --silent --file=./build/build_final.mf
+final_clean:
+	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) final"
+	@make --silent --file=./build/build_final.mf clean
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
-fclean_final:
-	@echo "$(BOLD)$(BLUE)[ Removing all Final build artifacts ]$(RESET)"
-	@make fclean --silent --file=./build/build_final.mf
+final_fclean:
+	@echo "$(RED_BG)$(WHITE)$(BOLD)[ Cleaning ]$(RESET)$(WHITE)$(ITALIC) final"
+	@make --silent --file=./build/build_final.mf fclean
+	@echo "$(DIM)$(WHITE)*----------*$(RESET)"
 
--include ./build/colors.mf
+final_re: final_fclean
+	@make --silent final
 
 
 
-.PHONY: all fclean re                                    \
-	    debug clean_debug fclean_debug re_debug          \
-	    test test_verbose clean_test fclean_test re_test \
-	    final clean_final fclean_final re_final
+.PHONY: all clean fclean re run                 \
+        debug debug_clean debug_fclean debug_re \
+		test test_clean test_fclean test_re     \
+        final final_clean final_fclean final_re

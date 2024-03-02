@@ -1,9 +1,11 @@
 # build artefacts
-./build/objs/**
-./build/deps/**
+build/objs/**
+build/deps/**
+build/debug/objs/**
+build/debug/deps/**
 
 # projects binaries
-./bin/**
+bin/**
 
 # vscode settings
 .vscode/**
