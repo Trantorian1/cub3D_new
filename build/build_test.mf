@@ -1,0 +1,75 @@
+# ===============================[ DEPENDENCIES ]============================= #
+
+-include ./build/color.mf
+-include ./build/setup.mf
+-include $(FILES_DEPS)
+
+.SECONDEXPANSION:
+
+# ==================================[ SETUP ]================================= #
+
+DIR_OBJS   = $(DIR_BUILD)/debug/objs
+DIR_DEPS   = $(DIR_BUILD)/deps/test
+
+FILES_SRCS = $(shell find ./ -wholename "$(DIR_TEST)/*.c")
+FILES_TEST = $(patsubst $(DIR_TEST)/%.c,$(DIR_BIN)/test/%,$(FILES_SRCS))
+FILES_DEPS = $(patsubst $(DIR_TEST)/%.c,$(DIR_DEPS)/%.d,$(FILES_SRCS))
+
+LIBS       += -lcriterion -L$(DIR_BIN) -l$(PROJECT)
+
+C_COMPILER = clang
+C_FLAGS    += -Werror -g $(DEBUG) $(SILENCED)
+
+# =================================[ BINARY ]================================= #
+
+all: $(FILES_TEST)
+
+
+
+$(DIR_BIN)/test/%: $(DIR_TEST)/%.c $$(subst test_,,src/$$*.c)
+# 	displays build command
+	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
+# 	builds object file
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) $(LIBS) $< -o $@
+	@export LD_LIBRARY_PATH=$(pwd)$(DIR_BIN):$(LD_LIBRARY_PATH); \
+	$(VALGRIND) $@
+
+# ==============================[ DEPENDENCIES ]============================== #
+
+$(DIR_DEPS)/%.d: $(DIR_TEST)/%.c
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) $(C_DEPS) -MT $(DIR_BIN)/test/$* -MF $@ $<
+
+# =================================[ CLEANUP ]================================ #
+
+clean:
+	@echo "$(RED)removing $(WHITE)*.d$(RESET)"
+	@rm -f $(FILES_DEPS)
+
+
+
+fclean: clean
+	@echo "$(BOLD)$(RED)removing $(WHITE)tests$(RESET)"
+	@rm -f $(FILES_TEST)
+
+
+
+re: fclean
+	@make -s all
+
+# ================================[ UTILITIES ]=============================== #
+
+debug:
+	@echo "srcs:"
+	@echo $(FILES_SRCS)
+	@echo "test:"
+	@echo $(FILES_TEST)
+	@echo "deps:"
+	@echo $(FILES_DEPS)
+	@echo "flags:"
+	@echo $(C_FLAGS)
+
+
+
+.PHONY: all clean fclean re debug

@@ -1,0 +1,80 @@
+# ===============================[ DEPENDENCIES ]============================= #
+
+-include ./build/color.mf
+-include ./build/setup.mf
+-include $(FILES_DEPS)
+
+# ==================================[ SETUP ]================================= #
+
+FILES_SRCS = $(shell find ./ -wholename "$(DIR_SRCS)/*.c")
+FILES_OBJS = $(patsubst $(DIR_SRCS)/%.c,$(DIR_OBJS)/%.o,$(FILES_SRCS))
+FILES_DEPS = $(patsubst $(DIR_SRCS)/%.c,$(DIR_DEPS)/%.d,$(FILES_SRCS))
+
+C_FLAGS    += -Wall -Wextra -Werror $(SILENCED) $(OPT)
+BIN        = $(DIR_BIN)/$(PROJECT)
+
+# =================================[ BINARY ]================================= #
+
+all: $(BIN)
+
+
+
+$(BIN): $(FILES_OBJS) $(FILES_DEPS)
+# 	displays build command
+	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(FILES_OBJS) -o $(BIN) $(LIBS)$(RESET)\n" "$@"
+# 	builds binary
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) -o $(BIN) $(FILES_OBJS)
+
+# =================================[ OBJECTS ]================================ #
+
+$(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c
+# 	displays build command
+	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
+# 	builds object file
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) -c $< -o $@
+
+# ==============================[ DEPENDENCIES ]============================== #
+
+$(DIR_DEPS)/%.d: $(DIR_SRCS)/%.c
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) $(C_DEPS) -MT $(DIR_OBJS)/$*.o -MF $@ $<
+
+# =================================[ CLEANUP ]================================ #
+
+clean:
+	@echo "$(RED)removing $(WHITE)*.o$(RESET)"
+	@rm -f $(FILES_OBJS)
+	@echo "$(RED)removing $(WHITE)*.d$(RESET)"
+	@rm -f $(FILES_DEPS)
+
+
+
+fclean: clean
+	@echo "$(BOLD)$(RED)removing $(WHITE)$(BIN)$(RESET)"
+	@rm -f $(BIN)
+
+
+
+re: fclean
+	@echo ""
+	@make -s all
+
+# ================================[ UTILITIES ]=============================== #
+
+run: all
+	@echo "$(YELLOW_BG)$(WHITE)$(BOLD)[ Running  ]$(RESET)$(WHITE)$(ITALIC) $(BIN)"
+	@./$(BIN)
+
+
+
+debug:
+	@echo $(FILES_SRCS)
+	@echo $(FILES_OBJS)
+	@echo $(FILES_DEPS)
+	@echo $(C_FLAGS)
+
+
+
+.PHONY: all clean fclean re run debug

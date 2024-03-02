@@ -1,0 +1,23 @@
+# ==================================[ SETUP ]================================= #
+
+VALGRIND   = valgrind --trace-children=yes --leak-check=full --show-leak-kinds=all
+
+DIR_BUILD  = ./build
+DIR_OBJS   = $(DIR_BUILD)/objs
+DIR_DEPS   = $(DIR_BUILD)/deps
+DIR_SRCS   = ./src
+DIR_TEST   = ./test
+DIR_INCL   = ./include ../vendor/
+DIR_BIN    = ./bin
+
+OPT        = -O2
+DEBUG      = -g
+LIBS       =
+
+C_COMPILER = clang
+I_FLAGS    = $(foreach dir,$(DIR_INCL),-I$(dir) )
+SILENCED   = -Wno-missing-variable-declarations
+C_FLAGS    = -Wall -Wextra $(I_FLAGS)
+C_DEPS     = -MM -MP $(I_FLAGS)
+
+PROJECT    = cub3D
