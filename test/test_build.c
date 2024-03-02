@@ -1,32 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   test_build.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 11:05:36 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/02 15:45:40 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/02 11:08:41 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/02 17:33:03 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
-#include <stdlib.h>
+#include <criterion/criterion.h>
+#include <stdio.h>
 
-#include "validate_args.h"
-#include "programdata.h"
+TestSuite(test_build, .timeout = 1);
 
-int32_t	main(int32_t argc, char const *argv[])
-{
-	t_programdata	data;
-	
-	if (validate_args(argc, argv) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
-	}
-	if (programdata(argv[1], &data) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
-	}
+Test(test_build, test_build_simple) {
+    printf("Build system working\n");
 
-	free(data.mlx);
-	return (EXIT_SUCCESS);
+    cr_assert_eq(1, 1);
 }

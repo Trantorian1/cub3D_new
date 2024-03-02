@@ -15,10 +15,10 @@ FILES_SRCS = $(shell find ./ -wholename "$(DIR_TEST)/*.c")
 FILES_TEST = $(patsubst $(DIR_TEST)/%.c,$(DIR_BIN)/test/%,$(FILES_SRCS))
 FILES_DEPS = $(patsubst $(DIR_TEST)/%.c,$(DIR_DEPS)/%.d,$(FILES_SRCS))
 
-LIBS_DEV   += -lcriterion -L$(DIR_BIN) -l$(PROJECT)
+LIBS_TEST  = $(LIBS) -lcriterion -L$(DIR_BIN) -l$(PROJECT)
 
 C_COMPILER = clang
-C_FLAGS    += -Werror -g $(DEBUG) $(SILENCED)
+C_FLAGS    += -Werror $(DEBUG) $(SILENCED)
 
 # =================================[ BINARY ]================================= #
 
@@ -26,12 +26,12 @@ all: $(FILES_TEST)
 
 
 
-$(DIR_BIN)/test/%: $(DIR_TEST)/%.c $$(subst test_,,src/$$*.c)
+$(DIR_BIN)/test/%: $(DIR_TEST)/%.c $(DIR_DEPS)/%.d $$(subst test_,,src/$$*.c)
 # 	displays build command
-	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
+	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(LIBS)\n$(RESET)" "$(notdir $@)"
 # 	builds object file
 	@mkdir -p $(@D)
-	@$(C_COMPILER) $(C_FLAGS) $(LIBS_DEV) $< -o $@
+	@$(C_COMPILER) $(C_FLAGS) $< -o $@ -L$(DIR_BIN) -l$(PROJECT) $(LIBS_TEST)
 	@export LD_LIBRARY_PATH=$(pwd)$(DIR_BIN):$(LD_LIBRARY_PATH); \
 	$(VALGRIND) $@
 

@@ -1,22 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_main.c                                        :+:      :+:    :+:   */
+/*   programdata.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 11:08:41 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/02 11:35:22 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/02 15:18:18 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/02 15:49:08 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <criterion/criterion.h>
-#include <stdio.h>
+#ifndef PROGRAMDATA_H
+# define PROGRAMDATA_H
 
-TestSuite(test_main, .timeout = 1);
+# include "s_programdata.h"
 
-Test(test_main, test_main_simple) {
-    printf("Build system working\n");
+uint8_t	programdata(const char *path, t_programdata *result);
 
-    cr_assert_eq(1, 1);
-}
+#endif
