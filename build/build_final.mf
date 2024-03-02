@@ -21,8 +21,7 @@ all: $(BIN)
 
 $(BIN): $(FILES_OBJS) $(FILES_DEPS)
 # 	displays build command
-	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) \
-             $(C_FLAGS) $(FILES_OBJS) -o $(BIN) $(LIBS)$(RESET)\n" "$@"
+	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(FILES_OBJS) -o $(BIN) $(LIBS)$(RESET)\n" "$@"
 # 	builds binary
 	@mkdir -p $(@D)
 	@$(C_COMPILER) $(C_FLAGS) -o $(BIN) $(FILES_OBJS)
@@ -31,8 +30,7 @@ $(BIN): $(FILES_OBJS) $(FILES_DEPS)
 
 $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c
 # 	displays build command
-	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) \
-             $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
+	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
 # 	builds object file
 	@mkdir -p $(@D)
 	@$(C_COMPILER) $(C_FLAGS) -c $< -o $@
