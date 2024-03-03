@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   s_programdata.h                                    :+:      :+:    :+:   */
+/*   renderer.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 15:10:49 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/03 17:50:49 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/03 16:50:29 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/03 16:53:47 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef S_PROGRAMDATA_H
-# define S_PROGRAMDATA_H
+#ifndef RENDERER_H
+# define RENDERER_H
 
-# include <s_map.h>
+# include <stdint.h>
 # include "type_annotations.h"
+# include "s_programdata.h"
 
-typedef struct s_programdata {
-	t_map				map;
-	void *_Nonnull		mlx;
-	void *_Nonnull		win;
-	void *_Nonnull		img;
-	int32_t				Bpp;
-	int32_t				ls;
-	uint32_t *_Nonnull	canvas;
-}	t_programdata;
+int32_t	renderer(t_programdata *_Nonnull data);
 
-#endif
+#endif // !RENDERER_H
