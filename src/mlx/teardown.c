@@ -1,48 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   programdata.c                                      :+:      :+:    :+:   */
+/*   teardown.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 15:16:00 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/02 16:03:58 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/03 13:34:47 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/03 14:22:20 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "programdata.h"
+#include "teardown.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "mlx.h"
-#include "map.h"
 
-uint8_t	mlx(void **result) {
-	void	*mlx;
-
-	if (result == NULL) {
+uint8_t	teardown(const t_programdata *data) {
+	if (data == NULL) {
 		return (EXIT_FAILURE);
 	}
 
-	mlx = mlx_init();
-	if (mlx == NULL) {
-		return (EXIT_FAILURE);
-	} else {
-		*result = mlx;
+	if (data->win != NULL) {
+		mlx_destroy_window(data->mlx, data->win);
 	}
-
-	return(EXIT_SUCCESS);
-}
-
-uint8_t	programdata(const char *path, t_programdata *result) {
-	if (path == NULL || result == NULL) {
-		return (EXIT_FAILURE);
-	}
-
-	if (map(path, &result->map) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
-	}
-	if (mlx(&result->mlx) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
+	if (data->mlx != NULL) {
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
 	}
 
 	return (EXIT_SUCCESS);

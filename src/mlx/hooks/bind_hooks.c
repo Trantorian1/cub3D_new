@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   s_programdata.h                                    :+:      :+:    :+:   */
+/*   bind_hooks.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 15:10:49 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/03 13:58:50 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/03 14:01:11 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/03 14:29:43 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef S_PROGRAMDATA_H
-# define S_PROGRAMDATA_H
+#include "bind_hooks.h"
 
-# include <s_map.h>
-# include "type_annotations.h"
+#include <stdlib.h>
+#include <X11/X.h>
+#include "mlx.h"
+#include "on_destroy.h"
 
-typedef struct s_programdata {
-	t_map			map;
-	void *_Nonnull	mlx;
-	void *_Nonnull	win;
-}	t_programdata;
+uint8_t	bind_hooks(t_programdata *_Nonnull data) {
+	if (data == NULL) {
+		return (EXIT_FAILURE);
+	}
 
-#endif
+	mlx_hook(data->win, DestroyNotify, StructureNotifyMask, &on_destroy, data);
+	return (EXIT_SUCCESS);
+}
