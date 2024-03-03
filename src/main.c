@@ -6,15 +6,18 @@
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 11:05:36 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/02 15:45:40 by emcnab           ###   ########.fr       */
+/*   Updated: 2024/03/03 14:13:16 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "mlx.h"
 #include "validate_args.h"
 #include "programdata.h"
+#include "bind_hooks.h"
+#include "teardown.h"
 
 int32_t	main(int32_t argc, char const *argv[])
 {
@@ -24,9 +27,13 @@ int32_t	main(int32_t argc, char const *argv[])
 		return (EXIT_FAILURE);
 	}
 	if (programdata(argv[1], &data) == EXIT_FAILURE) {
-		return (EXIT_FAILURE);
+		return (teardown(&data));
+	}
+	if (bind_hooks(&data) == EXIT_FAILURE) {
+		return (teardown(&data));
 	}
 
-	free(data.mlx);
-	return (EXIT_SUCCESS);
+	mlx_loop(data.mlx);
+
+	return (teardown(&data));
 }

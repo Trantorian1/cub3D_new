@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   s_programdata.h                                    :+:      :+:    :+:   */
+/*   on_key.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 15:10:49 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/03 17:50:49 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/03 14:38:18 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/03 15:44:28 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef S_PROGRAMDATA_H
-# define S_PROGRAMDATA_H
+#ifndef ON_KEY_H
+# define ON_KEY_H
 
-# include <s_map.h>
+# include <stdint.h>
+# include <stdbool.h>
 # include "type_annotations.h"
+# include "s_programdata.h"
 
-typedef struct s_programdata {
-	t_map				map;
-	void *_Nonnull		mlx;
-	void *_Nonnull		win;
-	void *_Nonnull		img;
-	int32_t				Bpp;
-	int32_t				ls;
-	uint32_t *_Nonnull	canvas;
-}	t_programdata;
+uint64_t *_Nonnull	keymap(void);
+uint8_t				keypos(uint32_t keysym);
+int					on_keypress(int32_t keysym, const void *_Nullable _);
+int					on_keyrelease(int32_t keysym, const void *_Nonnull _);
+bool				is_pressed(int32_t keysym);
 
-#endif
+#endif // !ON_KEY_H

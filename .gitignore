@@ -9,3 +9,6 @@ bin/**
 
 # vscode settings
 .vscode/**
+
+# valgrin artefacts
+vgcore*

@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   s_programdata.h                                    :+:      :+:    :+:   */
+/*   get_pixel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 15:10:49 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/03 17:50:49 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/03 17:33:32 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/03 17:48:56 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef S_PROGRAMDATA_H
-# define S_PROGRAMDATA_H
+#include "get_pixel.h"
 
-# include <s_map.h>
-# include "type_annotations.h"
+#include <stdlib.h>
 
-typedef struct s_programdata {
-	t_map				map;
-	void *_Nonnull		mlx;
-	void *_Nonnull		win;
-	void *_Nonnull		img;
-	int32_t				Bpp;
-	int32_t				ls;
-	uint32_t *_Nonnull	canvas;
-}	t_programdata;
+uint32_t *_Nonnull	get_pixel(
+	const t_programdata *_Nonnull data,
+	uint32_t x,
+	uint32_t y
+) {
+	static uint32_t dummy = 0x0;
 
-#endif
+	if (data == NULL) {
+		return (&dummy);
+	}
+
+	return (data->canvas + y * data->ls + x * data->Bpp);
+}

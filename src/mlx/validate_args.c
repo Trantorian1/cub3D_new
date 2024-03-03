@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   s_programdata.h                                    :+:      :+:    :+:   */
+/*   validate_args.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emcnab <emcnab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 15:10:49 by emcnab            #+#    #+#             */
-/*   Updated: 2024/03/03 17:50:49 by emcnab           ###   ########.fr       */
+/*   Created: 2024/03/02 15:36:29 by emcnab            #+#    #+#             */
+/*   Updated: 2024/03/03 14:16:54 by emcnab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef S_PROGRAMDATA_H
-# define S_PROGRAMDATA_H
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include "validate_args.h"
 
-# include <s_map.h>
-# include "type_annotations.h"
+uint8_t	validate_args(uint32_t argc, const char *argv[]) {
+	if (argc != 2 || argv[1] == NULL) {
+		errno = EINVAL;
+		perror("❌ Invalid args");
+		return (EXIT_FAILURE);
+	}
 
-typedef struct s_programdata {
-	t_map				map;
-	void *_Nonnull		mlx;
-	void *_Nonnull		win;
-	void *_Nonnull		img;
-	int32_t				Bpp;
-	int32_t				ls;
-	uint32_t *_Nonnull	canvas;
-}	t_programdata;
-
-#endif
+	return (EXIT_SUCCESS);
+}
