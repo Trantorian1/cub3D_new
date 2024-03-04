@@ -1,0 +1,85 @@
+# ===============================[ DEPENDENCIES ]============================= #
+
+-include ./build/color.mf
+-include ./build/setup.mf
+-include $(FILES_DEPS)
+
+# ==================================[ SETUP ]================================= #
+
+DIR_OBJS   = $(DIR_BUILD)/debug/objs
+DIR_DEPS   = $(DIR_BUILD)/deps
+
+FILES_SRCS = $(shell find ./ -wholename "$(DIR_SRCS)/*.c")
+FILES_OBJS = $(patsubst $(DIR_SRCS)/%.c,$(DIR_OBJS)/%.o,$(FILES_SRCS))
+FILES_DEPS = $(patsubst $(DIR_SRCS)/%.c,$(DIR_DEPS)/%.d,$(FILES_SRCS))
+
+C_FLAGS    += -g -fPIC $(SILENCED)
+
+LIB        = $(DIR_BIN)/lib$(PROJECT).so
+BIN        = $(DIR_BIN)/$(PROJECT)_debug
+
+# =================================[ LIBARY ]================================= #
+
+all: $(LIB) $(BIN)
+
+
+
+$(LIB): $(FILES_OBJS) $(FILES_DEPS)
+# 	displays build command
+	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) -shared$(RESET)\n" "$(LIB)"
+# 	builds libary
+	@mkdir -p $(@D)
+	@$(C_COMPILER) -shared -o $(LIB) $(filter-out %main.o,$(FILES_OBJS))
+
+$(BIN): $(FILES_OBJS) $(FILES_DEPS)
+# 	displays build command
+	@printf "$(BOLD)$(BLUE)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS) $(LIBS)$(RESET)\n" "$(BIN)"
+# 	builds libary
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) -o $(BIN) $(FILES_OBJS) $(LIBS)
+
+# =================================[ OBJECTS ]================================ #
+
+$(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c
+# 	displays build command
+	@printf "$(GREEN)building $(WHITE)%-30s$(RESET) $(CYAN)$(C_COMPILER) $(C_FLAGS)\n$(RESET)" "$(notdir $@)"
+# 	builds object file
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) -c $< -o $@
+
+# ==============================[ DEPENDENCIES ]============================== #
+
+$(DIR_DEPS)/%.d: $(DIR_SRCS)/%.c
+	@mkdir -p $(@D)
+	@$(C_COMPILER) $(C_FLAGS) $(C_DEPS) -MT $(DIR_OBJS)/$*.o -MF $@ $<
+
+# =================================[ CLEANUP ]================================ #
+
+clean:
+	@echo "$(RED)removing $(WHITE)*.o$(RESET)"
+	@rm -f $(FILES_OBJS)
+	@echo "$(RED)removing $(WHITE)*.d$(RESET)"
+	@rm -f $(FILES_DEPS)
+
+
+
+fclean: clean
+	@echo "$(BOLD)$(RED)removing $(WHITE)$(LIB)$(RESET)"
+	@rm -f $(LIB)
+
+
+
+re: fclean
+	@make -s all
+
+# ================================[ UTILITIES ]=============================== #
+
+debug:
+	@echo $(FILES_SRCS)
+	@echo $(FILES_OBJS)
+	@echo $(FILES_DEPS)
+	@echo $(C_FLAGS)
+
+
+
+.PHONY: all clean fclean re debug

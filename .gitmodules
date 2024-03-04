@@ -1,3 +1,7 @@
-[submodule "minilibx-linux"]
-	path = minilibx-linux
-	url = git@github.com:42Paris/minilibx-linux.git
+[submodule "vendor/Criterion"]
+	path = vendor/Criterion
+	url = https://github.com/Snaipe/Criterion.git
+[submodule "vendor/minilibx-linux"]
+	path = vendor/minilibx-linux
+	url = https://github.com/42Paris/minilibx-linux.git
+
