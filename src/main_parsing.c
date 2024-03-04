@@ -6,7 +6,7 @@
 /*   By: rraffi-k <rraffi-k@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 13:58:27 by rraffi-k          #+#    #+#             */
-/*   Updated: 2024/03/02 16:47:56 by rraffi-k         ###   ########.fr       */
+/*   Updated: 2024/03/02 17:52:41 by rraffi-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,30 +73,59 @@
 // }
 
 
-size_t get_file_size(int fd)
+size_t get_file_nb_lines(int fd)
 {
-	size_t size;
+	size_t nb;
 	char *line;
 
-	size = 0;
+	nb = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
-		size += ft_strlen(line);
+		nb += ft_strlen(line);
 		free(line);
 		line = get_next_line(fd);
 	}
 	safe_close(fd);
-	return (size);
+	return (nb);
 }
+
+
 
 int	parse_file(char *file, t_data *data)
 {
+	int	i;
+	size_t	file_nb_lines;
+
 	data->fd = safe_open(file);
 	if (data->fd == -1)
 		return (-1);
 	
-	data->map
+	file_nb_lines = get_file_size(data->fd);
+
+	
+	//TRANSPOSE FILE INTO A TAB IN MAPINFO
+	
+	data->mapinfo.file = ft_calloc(sizeof(char *), file_nb_lines);
+
+	i = 0;
+	while (i < file_nb_lines)
+	{
+		data->mapinfo.file[i] = get_next_line(data->fd);
+		i++;
+	}
+
+	//PARSE THE FILE
+
+
+	//if file[i] is printable et pas un digit
+		
+
+
+	//else if file[i][0] est un digit
+	// int j = 0;
+	// 	data->mapinfo.map[j] = file;
+	
 }
 
 int	parse_args(int argc, char **argv)
@@ -108,7 +137,6 @@ int	parse_args(int argc, char **argv)
 	}
 	return (EXIT_SUCCESS);
 }
-
 // int	main(int argc, char **argv)
 // {
 // 	t_data data;
@@ -118,8 +146,8 @@ int	parse_args(int argc, char **argv)
 // 	// (void) argv;
 // 	// (void) argc;
 	
-	if (parse_args(argc, argv) != 0)
-		return (EXIT_FAILURE);
+	// if (parse_args(argc, argv) != 0)
+	// 	return (EXIT_FAILURE);
 	
 
 // 	fd = safe_open(argv[1]);

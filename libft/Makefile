@@ -6,6 +6,7 @@ SRC	= ft_strlen.c \
 		ft_strjoin.c \
 		ft_strjoin_n.c \
 		ft_strjoin_and_free.c \
+		ft_calloc.c \ 
 		get_next_line.c \
 
 OBJS = ${SRC:.c=.o}

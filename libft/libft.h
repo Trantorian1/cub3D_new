@@ -6,7 +6,7 @@
 /*   By: rraffi-k <rraffi-k@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 11:49:58 by rraffi-k          #+#    #+#             */
-/*   Updated: 2024/02/29 17:32:18 by rraffi-k         ###   ########.fr       */
+/*   Updated: 2024/03/02 17:32:42 by rraffi-k         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*ft_strjoin_n(char *s1, char *s2);
 // void	ft_empty_buffer(char *buffer);
 char	*get_next_line(int fd);
 char	*ft_strjoin_and_free(char *s1, char const *s2);
+void	*ft_calloc(size_t nmemb, size_t size);
 
 
 #endif

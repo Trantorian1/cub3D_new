@@ -29,12 +29,13 @@ typedef struct s_texture
 
 } t_texture;
 
-typedef struct s_map
+typedef struct s_mapinfo
 {
     int width;
-    char **tab;
-    
-} t_map;
+    char **map;
+    char **file;
+
+} t_mapinfo;
 
 typedef struct s_img{
 	void	*mlx;
@@ -60,7 +61,7 @@ typedef struct s_data
 
     int fd;
 
-    t_map *map;
+    t_mapinfo mapinfo;
 
     t_img       img;
 	void		*mlx;
@@ -92,6 +93,8 @@ typedef struct s_checklist
 
 int safe_open(char *file_name);
 void safe_close(int fd);
+int get_map_nb_lines(char **map);
+int	get_map_width(char **map);
 
 
 #endif
